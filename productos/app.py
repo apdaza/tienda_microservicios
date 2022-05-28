@@ -1,5 +1,4 @@
 from flask import Flask, url_for, redirect
-from flask.helpers import url_for
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -72,5 +71,5 @@ def buscar(id):
 
 if __name__ == "__main__":
     db.create_all()
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
 

@@ -1,16 +1,7 @@
-version: '2'
+version: '3'
 
 services:
 
-  loadbalancer:
-    image: 'dockercloud/haproxy:latest'
-    links:
-      - nginx
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-      - '8085:80'
-      
   nginx:
     image: nginx:alpine
     volumes: 
@@ -24,9 +15,21 @@ services:
 
   clientes:
     build: ./clientes
+    healthcheck:
+      test: curl --fail -s http://localhost:5000/ || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
 
+  
   productos:
     build: ./productos
+    healthcheck:
+      test: curl --fail -s http://localhost:5000/ || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+
 
   
 

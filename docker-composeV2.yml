@@ -1,0 +1,18 @@
+version: '2'
+
+services:
+  
+  productos:
+    build: ./productos
+
+  loadbalancer:
+    image: 'dockercloud/haproxy:latest'
+    links:
+      - productos
+    volumes: 
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 80:80
+
+  
+

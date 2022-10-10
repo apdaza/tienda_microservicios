@@ -9,7 +9,7 @@ services:
     command: [nginx-debug, '-g', 'daemon off;']
     links: 
       - clientes
-      - productos
+      - productos 
     ports:
       - "8080:80"
 

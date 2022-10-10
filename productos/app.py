@@ -1,22 +1,10 @@
 from flask import Flask, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///productos.db'
-app.config['SECRET_KEY'] = "123"
+from util import create_app, db
+from models import producto
 
-db = SQLAlchemy(app)
-
-class producto(db.Model):
-    id  = db.Column("product_id", db.Integer, primary_key=True)
-    producto_nombre = db.Column(db.String(100))
-    producto_valor = db.Column(db.Integer)
-    producto_cantidad = db.Column(db.Integer)
-
-    def __init__(self, datos):
-        self.producto_nombre = datos["nombre"]
-        self.producto_cantidad = datos["cantidad"]
-        self.producto_valor = datos["valor"]
+app = create_app()
 
 @app.route("/")
 def principal():
@@ -40,14 +28,14 @@ def agregar(nombre, cantidad, valor):
     p = producto(datos)
     db.session.add(p)
     db.session.commit()
-    return redirect(url_for('principal'))
+    return redirect("/productos/")
 
 @app.route("/eliminar/<int:id>")
 def eliminar(id):
     p = producto.query.filter_by(id=id).first()
     db.session.delete(p)
     db.session.commit()
-    return redirect(url_for('principal'))
+    return redirect("/productos/")
 
 @app.route("/actualizar/<int:id>/<nombre>/<int:cantidad>/<int:valor>")
 def actualizar(id, nombre, cantidad, valor):
@@ -56,7 +44,7 @@ def actualizar(id, nombre, cantidad, valor):
     p.producto_cantidad = cantidad
     p.producto_valor = valor
     db.session.commit()
-    return redirect(url_for('principal'))
+    return redirect("/productos/")
 
 @app.route("/buscar/<int:id>")
 def buscar(id):
@@ -70,6 +58,5 @@ def buscar(id):
 
 
 if __name__ == "__main__":
-    db.create_all()
     app.run(debug=True, host='0.0.0.0')
 
